@@ -1,0 +1,138 @@
+﻿@page
+@model LoginModel
+@{
+    Layout = "_LayoutLogin";
+}
+
+@{
+    var success = TempData["SuccessMessage"] as string;
+}
+@if (!string.IsNullOrEmpty(success))
+{
+    <div class="container mt-3">
+        <div class="alert alert-success" role="alert">@success</div>
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.SelectMany(v => v.Errors).Any())
+{
+    <div class="alert alert-danger" role="alert">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="login-container">
+    <div class="text-center mb-4">
+        <img src="~/logo3.png" alt="Logo" style="max-width: 70px; margin-bottom: 10px;" />
+        <h2 class="brand-title"></h2>
+    </div>
+    <form method="post" autocomplete="off">
+        <div class="mb-3">
+            <label for="Email" class="form-label">E-mail</label>
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-0 text-orange">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm4-3a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" />
+                        <path fill-rule="evenodd" d="M8 9a5 5 0 0 0-5 5v.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14a5 5 0 0 0-5-5zm-4 5a4 4 0 0 1 8 0v.5H4V14z" />
+                    </svg>
+                </span>
+                <input asp-for="Login.Email" class="form-control input-dark" placeholder="Digite seu e-mail" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="Senha" class="form-label">Senha</label>
+            <div class="input-group">
+                <span class="input-group-text bg-dark border-0 text-orange">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
+                        <path d="M8 1a4 4 0 0 0-4 4v3a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2V5a4 4 0 0 0-4-4zm-3 4a3 3 0 1 1 6 0v3H5V5zm-2 5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z" />
+                    </svg>
+                </span>
+                <input asp-for="Login.Senha" type="password" class="form-control input-dark" placeholder="Digite sua senha" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg mt-2">Entrar</button>
+    </form>
+</div>
+
+@section Scripts {
+    <style>
+        body {
+            background-color: #23272b !important;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+        }
+
+        .login-container {
+            background-color: #2c3035;
+            border-radius: 12px;
+            padding: 36px 28px 28px 28px;
+            box-shadow: 0 6px 18px rgba(255, 152, 0, 0.10);
+            font-size: 1rem;
+            color: #f5f5f5;
+            max-width: 400px;
+            margin: 24px auto 0 auto; /* margem superior reduzida */
+        }
+
+        .brand-title {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #ff9800;
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            font-size: 1rem;
+            color: #bdbdbd;
+            font-weight: 500;
+        }
+
+        .input-group-text {
+            background: #23272b !important;
+            border: none !important;
+            color: #ff9800 !important;
+        }
+
+        .input-dark {
+            background-color: #23272b !important;
+            color: #f5f5f5 !important;
+            border: 1px solid #ff9800 !important;
+            border-radius: 4px !important;
+            font-size: 1rem !important;
+        }
+
+            .input-dark:focus {
+                border-color: #ffa733 !important;
+                box-shadow: 0 0 0 0.2rem rgba(255, 152, 0, 0.15) !important;
+                background-color: #23272b !important;
+                color: #fff !important;
+            }
+
+        .btn-primary {
+            background-color: #ff9800 !important;
+            border: none !important;
+            border-radius: 4px !important;
+            padding: 10px !important;
+            width: 100% !important;
+            font-size: 1.08rem !important;
+            color: #23272b !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px !important;
+            transition: background 0.2s !important;
+        }
+
+            .btn-primary:hover {
+                background-color: #ffa733 !important;
+                color: #23272b !important;
+            }
+
+        .alert-danger, .alert-success {
+            font-size: 1rem;
+            border-radius: 6px;
+        }
+    </style>
+}

@@ -1,0 +1,27 @@
+﻿@page "{id:int}"
+@model ManagerTruck.Web.Pages.Caminhao.NovaManutencaoModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Editar Caminhão";
+}
+
+<h2>Registrar Manutenção</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label>Caminhão ID</label>
+        <input asp-for="Input.CaminhaoId" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>KM</label>
+        <input asp-for="Input.KmNaManutencao" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Tipo</label>
+        <input asp-for="Input.Tipo" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>

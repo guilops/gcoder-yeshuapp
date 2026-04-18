@@ -1,0 +1,40 @@
+﻿@page
+@model HomeModel
+@{
+    ViewData["Title"] = "Área Logada";
+}
+
+@if (!string.IsNullOrEmpty(Model.Saudacao))
+{
+    <h4 style="font-family: 'Merriweather', serif; font-size: 1.25rem; font-weight: 500; color: #2C3E50;">
+        @Model.Saudacao
+    </h4>
+}
+
+<div class="container-fluid px-3 text-center">
+    <br />
+
+    <div class="eventos-section" style="margin-top:2rem;">
+        <div id="caminhaoCarousel" class="carousel slide mx-auto" data-bs-ride="carousel" data-bs-interval="2000" style="max-width: 600px;">
+            <div class="carousel-inner rounded shadow">
+                <div class="carousel-item active">
+                    <img src="~/caminhao1.jpg" class="d-block w-100" alt="Caminhão 1" style="object-fit:cover; height:320px;">
+                </div>
+                <div class="carousel-item">
+                    <img src="~/caminhao2.jpg" class="d-block w-100" alt="Caminhão 2" style="object-fit:cover; height:320px;">
+                </div>
+                <div class="carousel-item">
+                    <img src="~/caminhao3.jpg" class="d-block w-100" alt="Caminhão 3" style="object-fit:cover; height:320px;">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#caminhaoCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#caminhaoCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Próximo</span>
+            </button>
+        </div>
+    </div>
+</div>

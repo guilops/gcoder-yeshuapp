@@ -1,0 +1,55 @@
+﻿@page "{id:int}"
+@model ManagerTruck.Web.Pages.Caminhao.EditModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Editar Caminhão";
+}
+
+<div class="container">
+    <h2 class="mb-2 text-center">@ViewData["Title"]</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Caminhao.Id" />
+        <div class="form-group">
+            <label asp-for="Caminhao.Placa"></label>
+            <input asp-for="Caminhao.Placa" class="form-control" />
+            <span asp-validation-for="Caminhao.Placa" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Caminhao.Montadora"></label>
+            <input asp-for="Caminhao.MontadoraId" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Caminhao.Modelo"></label>
+            <input asp-for="Caminhao.Modelo" class="form-control" />
+            <span asp-validation-for="Caminhao.Modelo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Caminhao.AnoFabricacao"></label>
+            <input asp-for="Caminhao.AnoFabricacao" class="form-control" type="number" min="1900" max="2100" />
+            <span asp-validation-for="Caminhao.AnoFabricacao" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Caminhao.AnoModelo"></label>
+            <input asp-for="Caminhao.AnoModelo" class="form-control" type="number" min="1900" max="2100" />
+            <span asp-validation-for="Caminhao.AnoModelo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Caminhao.KmAtual">Km Atual</label>
+            <input asp-for="Caminhao.KmAtual" class="form-control" type="number" min="0" max="10000000" />
+            <span asp-validation-for="Caminhao.KmAtual" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Foto</label>
+            <input type="file" name="FotoFile" accept=".jpg,.png" class="form-control" />
+            @if (!string.IsNullOrEmpty(Model.Caminhao.FotoUrl))
+            {
+                <img src="@Model.Caminhao.FotoUrl" alt="Foto Caminhão" style="width:100px; margin-top:10px;" />
+            }
+        </div>
+        <br />
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a asp-page="/Caminhao/Index" class="btn btn-outline-primary">Voltar</a>
+        </div>
+    </form>
+</div>

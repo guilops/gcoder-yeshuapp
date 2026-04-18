@@ -1,0 +1,92 @@
+﻿@page
+@model ManagerTruck.Web.Pages.Caminhao.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Caminhões";
+}
+
+@if (Model.Caminhoes is not null && Model.Caminhoes.Any(c => c.PrecisaManutencao))
+{
+    <div class="alert alert-danger text-center">
+        Existem caminhões que precisam de manutenção urgente!
+    </div>
+}
+
+<div class="container">
+    <h2 class="mb-2 text-center">@ViewData["Title"]</h2>
+
+    <a asp-page="/Caminhao/Create" class="btn btn-success mb-2">
+        Novo Caminhão
+    </a>
+
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Ano Fabricação</th>
+                <th>Ano Modelo</th>
+                <th>KM</th>
+                <th>Status</th>
+                <th>Foto</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Caminhoes == null || !Model.Caminhoes.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-warning">
+                        Nenhum caminhão ainda foi cadastrado.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var c in Model.Caminhoes)
+                {
+                    <tr>
+                        <td>@c.Placa</td>
+                        <td>@c.Modelo</td>
+                        <td>@c.AnoFabricacao</td>
+                        <td>@c.AnoModelo</td>
+                        <td>@c.KmAtual</td>
+
+                        <td>
+                            @if (c.PrecisaManutencao)
+                            {
+                                <span class="badge bg-danger">URGENTE</span>
+                            }
+                            else if (c.ManutencaoProxima)
+                            {
+                                <span class="badge bg-warning text-dark">PRÓXIMA</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">OK</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (!string.IsNullOrEmpty(c.FotoUrl))
+                            {
+                                <img src="@c.FotoUrl" style="max-width:80px;" />
+                            }
+                        </td>
+
+                        <td>
+                            <a asp-page="/Caminhao/Edit" asp-route-id="@c.Id" class="btn btn-primary btn-sm">Editar</a>
+
+                            <a asp-page="/Caminhao/Delete" asp-route-id="@c.Id" class="btn btn-danger btn-sm">Excluir</a>
+
+                            <a asp-page="/Caminhao/NovaManutencao" asp-route-caminhaoId="@c.Id"
+                               class="btn btn-warning btn-sm">
+                                Manutenção
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

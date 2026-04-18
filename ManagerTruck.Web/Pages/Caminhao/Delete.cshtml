@@ -1,0 +1,17 @@
+﻿@page "{id:int}"
+@model ManagerTruck.Web.Pages.Caminhao.DeleteModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Excluir Caminhão";
+}
+
+<div class="container">
+    <h2 class="mb-2 text-center">@ViewData["Title"]</h2>
+    <div class="alert alert-danger">
+        Tem certeza que deseja excluir o caminhão <b>@Model.Caminhao.Placa</b>?
+    </div>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Excluir</button>
+        <a asp-page="/Caminhao/Index" class="btn btn-outline-primary">Cancelar</a>
+    </form>
+</div>
