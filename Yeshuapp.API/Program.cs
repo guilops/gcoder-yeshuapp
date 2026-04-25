@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
+using System.Text.Json;
 using Yeshuapp.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -91,7 +94,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CorsPolicy", policy =>
     {
         policy.WithOrigins(
-                "https://yeshuapp-front.onrender.com",
+                builder.Configuration["Jwt:Issuer"].ToString(),
                 "https://localhost:7179",
                 "http://localhost:5173",
                 "https://localhost:5001")
@@ -100,6 +103,26 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+
+/*healthchecks*/
+builder.Services.AddHealthChecks()
+    .AddMySql(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+        name: "mysql",
+        failureStatus: HealthStatus.Unhealthy
+    )
+    .AddUrlGroup(
+        new Uri(builder.Configuration["Jwt:Issuer"].ToString()),
+        name: "frontend",
+        failureStatus: HealthStatus.Unhealthy
+    );
+
+builder.Services.AddHealthChecks()
+.AddCheck(
+    "self",
+    () => HealthCheckResult.Healthy(),
+    tags: new[] { "live" }
+);
 
 var app = builder.Build();
 
@@ -128,7 +151,33 @@ app.UseAuthorization();
 app.MapControllers().RequireAuthorization();
 
 // 🔹 Seed de usuário Admin (executado ao iniciar)
-//await IdentitySeed.SeedAdminAsync(app);
+await IdentitySeed.SeedAdminAsync(app);
+
+app.MapHealthChecks("/healthCheck", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+
+        var result = new
+        {
+            status = report.Status.ToString(),
+            totalDuration = report.TotalDuration,
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                error = e.Value.Exception?.Message,
+                duration = e.Value.Duration.ToString()
+            })
+        };
+
+        await context.Response.WriteAsync(JsonSerializer.Serialize(result, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        }));
+    }
+});
 
 app.Run();
 
