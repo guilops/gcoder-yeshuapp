@@ -1,27 +1,31 @@
-﻿# Etapa de build
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+﻿# =========================
+# Etapa de build
+# =========================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia tudo (inclui o .csproj)
-COPY . .
-
-
-# Restaura as dependências
+# Copia só o csproj primeiro (melhor uso de cache)
+COPY Yeshuapp.API.csproj ./
 RUN dotnet restore "Yeshuapp.API.csproj"
 
-# Publica o projeto para a pasta /app/publish
-RUN dotnet publish "Yeshuapp.API.csproj" -c Release -o /app/publish
+# Agora copia o restante do código
+COPY . .
 
-# Etapa final de runtime
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+# Publica a aplicação
+RUN dotnet publish "Yeshuapp.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# =========================
+# Etapa final (runtime)
+# =========================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Copia o resultado da publicação do build
+# Copia os arquivos publicados
 COPY --from=build /app/publish .
 
-# Define a porta exposta e URL de escuta
+# Configuração da porta (Render usa 8080)
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-# Define o comando de entrada
+# Sobe a aplicação
 ENTRYPOINT ["dotnet", "Yeshuapp.API.dll"]
