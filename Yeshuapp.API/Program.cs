@@ -128,7 +128,7 @@ app.UseAuthorization();
 app.MapControllers().RequireAuthorization();
 
 // 🔹 Seed de usuário Admin (executado ao iniciar)
-await IdentitySeed.SeedAdminAsync(app);
+//await IdentitySeed.SeedAdminAsync(app);
 
 app.Run();
 
